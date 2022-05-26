@@ -7,12 +7,12 @@ namespace parallel
 	// 1. need to be able to provide work
 	// 2. need to be able to wait until not busy anymore
 	// 3. need to use double-buffering
-	class SharedCommandBuffer;
+	class CommandBufferManager;
 
 	class CommandBufferWorker
 	{
 	public:
-		CommandBufferWorker(SharedCommandBuffer& cmbRef, bool IsThreaded);
+		CommandBufferWorker(CommandBufferManager& cmbRef, bool IsThreaded);
 		void Start();
 		void End();
 		void Join();
@@ -21,7 +21,7 @@ namespace parallel
 		void WorkLoop();
 
 		std::thread m_WorkerThread;
-		SharedCommandBuffer& m_ScbRef;
+		CommandBufferManager& m_CbmRef;
 		bool m_Alive;
 		bool m_IsThreaded;
 	};

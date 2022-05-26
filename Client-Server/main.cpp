@@ -3,37 +3,43 @@
 #include <random>
 #include "CommandBufferWorker.h"
 #include "CommandBufferManager.h"
+#include "Utils.h"
 
-struct SomeData
+static int fib(int n)
 {
-	int index;
-	int numbers[9];
-};
+	if (n <= 1)
+		return n;
+	return fib(n - 1) + fib(n - 2);
+}
 
-void WriteCommands(parallel::SharedCommandBuffer& cb, SomeData& data) 
+void WriteCommands(parallel::SharedCommandBuffer& cb) 
 {
-	cb.WriteCommand([&]() {printf("Hey, here's some data: %d\n", data.index); });
-	cb.WriteCommand([&]() {data.index = 0; printf("Hey, here's some data: %d\n", data.index); });
 	for (int i = 0; i < 1000; i++)
 	{
-		cb.WriteCommand([&, i]() {for (int j = 0; j < 100000; j++) data.numbers[i % 9] * 123546; printf("Hey, here's some data: %d\n", data.index); });
+		cb.WriteCommand([]() {for (int j = 0; j < 10; j++) printf("Hey, here's some data: %d\n", fib(43)); });
 	}
-	//cb.WriteCommand([&]() {worker.End(); });
 }
 
 void Test() 
 {
 	parallel::CommandBufferManager man(2);
-	// give ref to worker and launch();
+	parallel::CommandBufferWorker worker(man, true);
+	Utils::AutoTimeLog start("Parallel test");
+	worker.Start();
 
-	SomeData data;
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		auto& cb = man.GetCommandBuffer();
-		WriteCommands(cb, data);
+		
+		fib(43);
+		WriteCommands(cb);// wont work yet, thread can starve if one thread keeps taking
+
 		man.Submit(cb.GetID());
 	}
 
+	worker.End();
+	worker.Join();
+	start.StopAndPrint();
 }
 
 int main()
@@ -41,7 +47,7 @@ int main()
 	const int iterations = 10000;
 	{
 		Test();
-		SomeData data;
+		/*SomeData data;
 		auto start = std::chrono::steady_clock::now();
 
 		parallel::SharedCommandBuffer cmb(true);
@@ -61,6 +67,7 @@ int main()
 
 		std::cout	<< std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
 			<< " ms" << std::endl;
+	}*/
 	}
 	return 0;
 }

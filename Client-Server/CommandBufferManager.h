@@ -1,5 +1,6 @@
 #pragma once
 #include "SharedCommandBuffer.h"
+#include <array>
 
 namespace parallel
 {
@@ -13,11 +14,17 @@ namespace parallel
 		CommandBufferManager();
 		CommandBufferManager(uint32_t numBuffers);
 
+		// for client
 		SharedCommandBuffer& GetCommandBuffer();
-
 		void Submit(uint32_t CommandBufferID);
+
+		// for worker
+		SharedCommandBuffer& AcquireCommandBuffer();
+		void ReturnCommandBuffer(uint32_t CommandBufferID);
+
 	private:
-		std::vector<SharedCommandBuffer> m_CommandBuffers;
+		std::array<SharedCommandBuffer, 2> m_CommandBuffers;
 		uint32_t m_ActiveRecordingIdx;
+		uint32_t m_ActiveExecutionIdx;
 	};
 }

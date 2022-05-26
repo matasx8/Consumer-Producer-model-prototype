@@ -1,35 +1,41 @@
 #include "CommandBufferWorker.h"
-#include "SharedCommandBuffer.h"
+#include "CommandBufferManager.h"
 
-parallel::CommandBufferWorker::CommandBufferWorker(SharedCommandBuffer& cmbRef, bool isThreaded)
-	: m_WorkerThread(), m_ScbRef(cmbRef), m_Alive(true), m_IsThreaded(isThreaded)
+namespace parallel
 {
-}
-
-void parallel::CommandBufferWorker::Start()
-{
-	if(m_IsThreaded)
-		m_WorkerThread = std::move(std::thread(&CommandBufferWorker::WorkLoop, this));
-}
-
-void parallel::CommandBufferWorker::End()
-{
-	m_Alive = false;
-}
-
-void parallel::CommandBufferWorker::Join()
-{
-	if(m_IsThreaded)
-		m_WorkerThread.join();
-}
-
-void parallel::CommandBufferWorker::WorkLoop()
-{
-	while (m_Alive)
+	CommandBufferWorker::CommandBufferWorker(CommandBufferManager& cmbRef, bool isThreaded)
+		: m_WorkerThread(), m_CbmRef(cmbRef), m_Alive(true), m_IsThreaded(isThreaded)
 	{
-		if (!m_ScbRef.IsQueueEmpty())
+	}
+
+	void CommandBufferWorker::Start()
+	{
+		if (m_IsThreaded)
+			m_WorkerThread = std::move(std::thread(&CommandBufferWorker::WorkLoop, this));
+	}
+
+	void CommandBufferWorker::End()
+	{
+		m_Alive = false;
+	}
+
+	void CommandBufferWorker::Join()
+	{
+		if (m_IsThreaded)
+			m_WorkerThread.join();
+	}
+
+	void CommandBufferWorker::WorkLoop()
+	{
+		while (m_Alive)
 		{
-			m_ScbRef.GetCommand()();
+			auto& cb = m_CbmRef.AcquireCommandBuffer();
+			for (int i = 0; i < cb.GetSize(); i++)
+			{
+				auto cmd = cb.GetCommand();
+				cmd();
+			}
+			m_CbmRef.ReturnCommandBuffer(cb.GetID());
 		}
 	}
 }
