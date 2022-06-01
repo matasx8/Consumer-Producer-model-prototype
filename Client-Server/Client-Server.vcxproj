@@ -139,19 +139,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ConsumerThread.cpp" />
+    <ClCompile Include="ConsumerBase.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MockEngine.cpp" />
     <ClCompile Include="Tests.cpp" />
     <ClCompile Include="Utils.cpp" />
-    <ClCompile Include="WorkQ.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConsumerBase.h" />
     <ClInclude Include="ConsumerThread.h" />
     <ClInclude Include="MockEngine.h" />
     <ClInclude Include="Tests.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="WorkQ.h" />
+    <ClInclude Include="WorkQ_ST.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

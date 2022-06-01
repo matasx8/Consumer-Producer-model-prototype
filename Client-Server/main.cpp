@@ -6,14 +6,13 @@
 #include "Utils.h"
 #include <memory>
 #include <array>
+#include "Tests.h"
 
 
 int main()
 {
-	prl::MockEngine engine;
-	engine.Init();
-	engine.DoFakeWork();
-	engine.ShutDown();
+	tests::ProducerConsumerThreaded_AllWorkToConsumer();
+	tests::ProducerConsumerThreaded_SharedWork();
 	return 0;
 }
 

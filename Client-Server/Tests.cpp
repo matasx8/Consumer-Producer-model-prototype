@@ -1,5 +1,6 @@
 #include "Tests.h"
 #include "Utils.h"
+#include "MockEngine.h"
 
 void tests::SampleTest()
 {
@@ -7,19 +8,24 @@ void tests::SampleTest()
 	start.StopAndPrint();
 }
 
-static int fib(int n)
+void tests::ProducerConsumerThreaded_AllWorkToConsumer()
 {
-    if (n <= 1)
-        return n;
-    return fib(n - 1) + fib(n - 2);
+	Utils::AutoTimeLog start("ProducerConsumerThreaded_AllWorkToConsumer");
+	MockEngine engine;
+	engine.Init();
+	engine.AllWorkToConsumer();
+	engine.ShutDown();
+	start.StopAndPrint();
 }
 
-void tests::RecursiveFibonacciTest()
+void tests::ProducerConsumerThreaded_SharedWork()
 {
-    Utils::AutoTimeLog start("Recursive Fib Test banch constant");
-    long long result = 0ll;
-    for (int i = 0; i < 100000000; i++)
-        result += fib(42);
-    printf("Result: %lld \n", result);
-    start.StopAndPrint();
+	Utils::AutoTimeLog start("ProducerConsumerThreaded_SharedWork");
+	MockEngine engine;
+	engine.Init();
+	engine.SharedWork();
+	engine.ShutDown();
+	start.StopAndPrint();
 }
+
+

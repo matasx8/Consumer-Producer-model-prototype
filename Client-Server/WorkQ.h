@@ -33,7 +33,7 @@ namespace prl
 			std::unique_lock<std::mutex> lock(m_Mutex);
 			return m_Q.size();
 		}
-	private:
+	protected:
 		std::mutex m_Mutex;
 		std::condition_variable m_CV;
 		std::list<T> m_Q;

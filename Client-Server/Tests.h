@@ -4,6 +4,7 @@ namespace tests
 {
 	void SampleTest();
 
-	void RecursiveFibonacciTest();
+	void ProducerConsumerThreaded_AllWorkToConsumer();
+	void ProducerConsumerThreaded_SharedWork();
 }
 

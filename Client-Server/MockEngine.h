@@ -1,58 +1,77 @@
 #pragma once
 #include "ConsumerThread.h"
+#include "WorkQ.h"
 #include <algorithm>
 #include <array>
 
-namespace prl
+// TODO: use namespace to diferentiate which memory is accecible by whom?
+struct rando
 {
-	struct rando
+	rando()
 	{
-		rando()
-		{
-			printf("Struct constructed!\n");
-		}
-		~rando()
-		{
-			printf("Struct destructed %d bytes!\n", sizeof(numbers));
-		}
-
-		void init()
-		{
-			for (auto& nr : numbers)
-			{
-				nr = rand();
-			}
-		}
-
-		void sort()
-		{
-			std::sort(numbers.begin(), numbers.end());
-		}
-
-		void print()
-		{
-			printf("First number %d, last number %d\n", numbers.front(), numbers.back());
-		}
-	private:
-		std::array<int, 9999999> numbers;
-	};
-
-	class MockEngine
+		printf("Struct constructed!\n");
+	}
+	~rando()
 	{
-	public:
-		MockEngine();
-		void Init();
+		printf("Struct destructed %d bytes!\n", sizeof(numbers));
+	}
 
-		void DoFakeWork();
-		void ShutDown();
+	void init()
+	{
+		for (auto& nr : numbers)
+		{
+			nr = rand();
+		}
+	}
 
-	private:
-		WorkQ<std::_Mem_fn<void (MockEngine::*)()>> m_Q; // How do I make this prettier?
-		ConsumerThread<MockEngine> m_Worker;
-		rando* m_Ptr;
+	void _init()
+	{
+		for (auto& nr : _numbers)
+		{
+			nr = rand();
+		}
+	}
 
-		void Cmd_Rando_init();
-		void Cmd_Rando_sort();
-		void Cmd_Rando_print();
-	};
-}
+	void sort()
+	{
+		std::sort(numbers.begin(), numbers.end());
+	}
+
+	void _sort()
+	{
+		std::sort(_numbers.begin(), _numbers.end());
+	}
+
+	void print()
+	{
+		printf("First number %d, last number %d\n", numbers.front(), numbers.back());
+	}
+
+	void _print()
+	{
+		printf("_First number %d, last number %d\n", _numbers.front(), _numbers.back());
+	}
+private:
+	std::array<int, 9999999> numbers;
+	std::array<int, 9999999> _numbers;
+};
+
+class MockEngine
+{
+public:
+	MockEngine();
+	void Init(bool isMultithreaded);
+
+	void AllWorkToConsumer();
+	void SharedWork();
+	void ShutDown();
+
+private:
+	prl::WorkQ<std::_Mem_fn<void (MockEngine::*)()>> m_Q; // How do I make this prettier?
+	prl::ConsumerThread<MockEngine> m_Worker;
+	rando* m_Ptr;
+
+	void Cmd_Rando_init();
+	void Cmd_Rando_sort();
+	void Cmd_Rando_print();
+};
