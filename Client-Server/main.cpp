@@ -2,31 +2,18 @@
 #include <chrono>
 #include <random>
 #include "ConsumerThread.h"
+#include "MockEngine.h"
 #include "Utils.h"
+#include <memory>
+#include <array>
 
-// TODO: use unique pointers to ensure resource liftime
-// finish test and profile
-//
-
-struct rando
-{
-	
-	void init()
-	{
-		for (auto& nr : numbers)
-		{
-			nr = rand();
-		}
-	}
-private:
-	int numbers[9999999];
-};
 
 int main()
 {
-	const int iterations = 10000;
-	{
-
-	}
+	prl::MockEngine engine;
+	engine.Init();
+	engine.DoFakeWork();
+	engine.ShutDown();
 	return 0;
 }
+

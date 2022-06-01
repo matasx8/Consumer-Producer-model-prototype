@@ -139,19 +139,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CommandBufferManager.cpp" />
+    <ClCompile Include="ConsumerThread.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="CommandBufferWorker.cpp" />
-    <ClCompile Include="SharedCommandBuffer.cpp" />
+    <ClCompile Include="MockEngine.cpp" />
     <ClCompile Include="Tests.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="WorkQ.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommandBufferManager.h" />
-    <ClInclude Include="CommandBufferWorker.h" />
-    <ClInclude Include="SharedCommandBuffer.h" />
+    <ClInclude Include="ConsumerThread.h" />
+    <ClInclude Include="MockEngine.h" />
     <ClInclude Include="Tests.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="WorkQ.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
