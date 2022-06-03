@@ -7,7 +7,7 @@ namespace prl
 	template <typename T> class ConsumerThread : ConsumerBase<T>
 	{
 	public:
-		ConsumerThread(T& functionOwner, WorkQ<std::_Mem_fn<void (T::*)()>>& workQ)
+		ConsumerThread(T& functionOwner, WorkQ<T>& workQ)
 			: ConsumerBase<T>(functionOwner, workQ), m_Thread(&ConsumerThread::WorkLoop, this)
 		{}
 

@@ -10,7 +10,7 @@ namespace prl
 	template <typename T> class ConsumerBase
 	{
 	public:
-		ConsumerBase(T& functionOwner, WorkQ<std::_Mem_fn<void (T::*)()>>& workQ)
+		ConsumerBase(T& functionOwner, WorkQ<T>& workQ)
 			: m_FunctionOwner(functionOwner), m_Q(workQ), m_Alive(true)
 		{
 		}
@@ -24,7 +24,7 @@ namespace prl
 	protected:
 
 		T& m_FunctionOwner;
-		WorkQ<std::_Mem_fn<void (T::*)()>>& m_Q;
+		WorkQ<T>& m_Q;
 		bool m_Alive;
 	};
 }

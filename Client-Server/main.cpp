@@ -13,6 +13,7 @@ int main()
 {
 	tests::ProducerConsumerThreaded_AllWorkToConsumer();
 	tests::ProducerConsumerThreaded_SharedWork();
+	tests::ProducerConsumerNonThreaded_SharedWork();
 	return 0;
 }
 

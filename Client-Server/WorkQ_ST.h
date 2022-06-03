@@ -3,22 +3,21 @@
 
 namespace prl
 {
-	template <typename T, typename F> class WorkQ_ST : WorkQ<T>
+	template <typename T> class WorkQ_ST : public WorkQ<T>
 	{
 	public:
-		WorkQ_ST(F& functionOwner)
+		WorkQ_ST(T& functionOwner)
 			: WorkQ<T>(), m_FunctionOwner(functionOwner)
+		{}
 
-		inline void add(T item) override {
+		inline void add(std::_Mem_fn<void (T::*)()> item) override {
 			item(m_FunctionOwner);
 		}
-
-		inline T remove() override {} // delete?
 
 		inline size_t size() override{
 			return this->m_Q.size();
 		}
 	private:
-		F& m_FunctionOwner;
+		T& m_FunctionOwner;
 	};
 }

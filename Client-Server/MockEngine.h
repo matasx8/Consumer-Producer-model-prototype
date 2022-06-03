@@ -1,10 +1,9 @@
 #pragma once
 #include "ConsumerThread.h"
-#include "WorkQ.h"
+#include "WorkQ_ST.h"
 #include <algorithm>
 #include <array>
 
-// TODO: use namespace to diferentiate which memory is accecible by whom?
 struct rando
 {
 	rando()
@@ -52,10 +51,12 @@ struct rando
 		printf("_First number %d, last number %d\n", _numbers.front(), _numbers.back());
 	}
 private:
+	// fake data to work on
 	std::array<int, 9999999> numbers;
 	std::array<int, 9999999> _numbers;
 };
 
+// fake example engine
 class MockEngine
 {
 public:
@@ -67,10 +68,13 @@ public:
 	void ShutDown();
 
 private:
-	prl::WorkQ<std::_Mem_fn<void (MockEngine::*)()>> m_Q; // How do I make this prettier?
-	prl::ConsumerThread<MockEngine> m_Worker;
+	prl::WorkQ<MockEngine>* m_Q;
+	prl::ConsumerThread<MockEngine>* m_Worker;
 	rando* m_Ptr;
 
+	bool m_IsMultiThreaded;
+
+	// Mock commands
 	void Cmd_Rando_init();
 	void Cmd_Rando_sort();
 	void Cmd_Rando_print();
