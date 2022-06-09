@@ -1,7 +1,7 @@
 # Consumer-Producer model prototype
 Universal Producer-Consumer model implementation. Synchronization of shared memory usage is left to the user of this. 
 <br><br>
-Using run-time polymorphism this example uses a fake "Mock Engine" to show how to use this to record commands for the Consumer thread to execute in parallel 
+Using run-time polymorphism and smart pointers this example uses a fake "Mock Engine" to show how to use this to record commands for the Consumer thread to execute in parallel 
 or to execute immediatelly on the Producer thread for easier debugging.
 <br><br>
 * WorkQ.h - template Work Queue for threaded Producer-Consumer
