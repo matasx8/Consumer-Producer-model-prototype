@@ -30,9 +30,9 @@ void MockEngine::AllWorkToConsumer()
 	for (int i = 0; i < 50; i++)
 	{
 		// produce commands
-		m_Q->add(std::mem_fn(&MockEngine::Cmd_Rando_init));
-		m_Q->add(std::mem_fn(&MockEngine::Cmd_Rando_sort));
-		m_Q->add(std::mem_fn(&MockEngine::Cmd_Rando_print));
+		m_Q->add(std::mem_fn(&MockEngine::Cmd_Rando_init), std::make_shared<ExampleResource2>("Hello\n"));
+		m_Q->add(std::mem_fn(&MockEngine::Cmd_Rando_sort), std::make_shared<ExampleResource1>(1));
+		m_Q->add(std::mem_fn(&MockEngine::Cmd_Rando_print), std::make_shared<prl::CmdRsc>());
 	}
 }
 
@@ -45,9 +45,9 @@ void MockEngine::SharedWork()
 		m_Ptr->init();
 		m_Ptr->sort();
 		m_Ptr->print();
-		m_Q->add(std::mem_fn(&MockEngine::Cmd_Rando_init));
-		m_Q->add(std::mem_fn(&MockEngine::Cmd_Rando_sort));
-		m_Q->add(std::mem_fn(&MockEngine::Cmd_Rando_print));
+		m_Q->add(std::mem_fn(&MockEngine::Cmd_Rando_init), std::make_shared<ExampleResource2>("Hello\n"));
+		m_Q->add(std::mem_fn(&MockEngine::Cmd_Rando_sort), std::make_shared<ExampleResource1>(1));
+		m_Q->add(std::mem_fn(&MockEngine::Cmd_Rando_print), std::make_shared<prl::CmdRsc>());
 	}
 }
 
@@ -63,17 +63,21 @@ void MockEngine::ShutDown()
 	delete m_Ptr;
 }
 
-void MockEngine::Cmd_Rando_init()
+void MockEngine::Cmd_Rando_init(std::shared_ptr<prl::CmdRsc> rsc)
 {
+	auto* re = (ExampleResource2*)rsc.get();
+	printf(re->msg.c_str());
 	m_Ptr->_init();
 }
 
-void MockEngine::Cmd_Rando_sort()
+void MockEngine::Cmd_Rando_sort(std::shared_ptr<prl::CmdRsc> rsc)
 {
-	m_Ptr->_sort();
+	auto* re = (ExampleResource1*)rsc.get();
+	while(re->repeatTimes--)
+		m_Ptr->_sort();
 }
 
-void MockEngine::Cmd_Rando_print()
+void MockEngine::Cmd_Rando_print(std::shared_ptr<prl::CmdRsc> rsc)
 {
 	m_Ptr->_print();
 }

@@ -26,8 +26,8 @@ namespace prl
 		{
 			while (this->m_Alive || this->m_Q.size())
 			{
-				auto func = this->m_Q.remove();
-				func(this->m_FunctionOwner);
+				auto funcNdata = this->m_Q.remove();
+				funcNdata.first(this->m_FunctionOwner, funcNdata.second);
 			}
 		}
 

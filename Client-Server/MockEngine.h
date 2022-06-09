@@ -56,6 +56,18 @@ private:
 	std::array<int, 9999999> _numbers;
 };
 
+struct ExampleResource1 : prl::CmdRsc
+{
+	ExampleResource1(int a) : repeatTimes(a) {};
+	int repeatTimes;
+};
+
+struct ExampleResource2 : prl::CmdRsc
+{
+	ExampleResource2(std::string&& str) : msg(str) {};
+	std::string msg;
+};
+
 // fake example engine
 class MockEngine
 {
@@ -75,7 +87,7 @@ private:
 	bool m_IsMultiThreaded;
 
 	// Mock commands
-	void Cmd_Rando_init();
-	void Cmd_Rando_sort();
-	void Cmd_Rando_print();
+	void Cmd_Rando_init(std::shared_ptr<prl::CmdRsc> rsc);
+	void Cmd_Rando_sort(std::shared_ptr<prl::CmdRsc> rsc);
+	void Cmd_Rando_print(std::shared_ptr<prl::CmdRsc> rsc);
 };

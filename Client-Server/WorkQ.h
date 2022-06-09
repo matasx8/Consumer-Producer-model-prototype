@@ -3,9 +3,14 @@
 #include <vector>
 #include <list>
 #include <mutex>
+#include <memory>
+#include <utility>
 
 namespace prl
 {
+	struct CmdRsc // Base command resource
+	{	};
+
 	template <typename T> class WorkQ
 	{
 	public:
@@ -13,18 +18,18 @@ namespace prl
 		{
 		}
 
-		virtual inline void add(std::_Mem_fn<void (T::*)()> item) {
+		virtual inline void add(std::_Mem_fn<void (T::*)(std::shared_ptr<CmdRsc>)> item, std::shared_ptr<CmdRsc> rsc) {
 			std::unique_lock<std::mutex> lock(m_Mutex);
-			m_Q.push_back(item);
+			m_Q.emplace_back(item, rsc);
 			m_CV.notify_one();
 		}
 
-		virtual inline std::_Mem_fn<void (T::*)()> remove() {
+		virtual inline std::pair<std::_Mem_fn<void (T::*)(std::shared_ptr<CmdRsc>)>, std::shared_ptr<CmdRsc>> remove() {
 			std::unique_lock<std::mutex> lock(m_Mutex);
 			if (m_Q.size() == 0)
 				m_CV.wait(lock);
 
-			std::_Mem_fn<void (T::*)()> item = m_Q.front();
+			auto item = m_Q.front();
 			m_Q.pop_front();
 			return item;
 		}
@@ -36,7 +41,7 @@ namespace prl
 	protected:
 		std::mutex m_Mutex;
 		std::condition_variable m_CV;
-		std::list<std::_Mem_fn<void (T::*)()>> m_Q;
+		std::list<std::pair<std::_Mem_fn<void (T::*)(std::shared_ptr<CmdRsc>)>, std::shared_ptr<CmdRsc>>> m_Q;
 	};
 }
 
